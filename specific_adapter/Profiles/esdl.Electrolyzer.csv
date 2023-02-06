@@ -1,0 +1,17 @@
+1,2,3,CTMref_r,Overrideval,CTMref_w
+efficiency,,,,,
+technicalLifetime,,,,,
+state,ENABLED,,yara_production_h2_electrolysis,1.,yara_production_h2_electrolysis
+state,DISABLED,,yara_production_h2_electrolysis,0.,yara_production_h2_electrolysis
+state,OPTIONAL,,,,
+costInformation,developmentCosts,value,,,
+costInformation,discountRate,value,,,
+costInformation,fixedMaintenanceCosts,value,,,
+costInformation,fixedOperationalAndMaintenanceCosts,value,,,
+costInformation,fixedOperationalCosts,value,,,
+costInformation,installationCosts,value,,,
+costInformation,investmentCosts,value,,,
+costInformation,marginalCosts,value,,,margcostsCTMref
+costInformation,variableMaintenanceCosts,value,,,
+costInformation,variableOperationalAndMaintenanceCosts,value,,,
+costInformation,variableOperationalCosts,value,,,
