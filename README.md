@@ -84,3 +84,5 @@ There is also Flask-RESTX, which is a fork of Flask-RESTPlus so is very similar.
 flask-accepts, marshmallow, and marshmallow-dataclass for pretty nice results. However, Flask-smorest does not need any
 of that because it just directly builds on top of marshmallow, so the end result is cleaner.# Adapter-CTM
 # Adapter-CTM
+# Adapter-CTM
+# Adapter-CTM
