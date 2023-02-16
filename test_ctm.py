@@ -3,14 +3,15 @@ from tno.etm_price_profile_adapter.types import CTMConfig, CTMAdapterConfig
 
 ctm_config = CTMConfig(
     endpoint="https://beta.carbontransitionmodel.com/api/",
-    CTM_scenario_ID="base", #CTM_session_ID="SE-b64c2553cc0f19f8", CTM_scenario_ID="base"
-    ETM_scenario_ID="13579" #ETM_session_ID="992263", ETM_scenario_ID="13579"
+    CTM_scenario_ID="base",
+    ETM_scenario_ID="13579"
     #bucket=N.A.
 )
 
 ctm_adapter_config = CTMAdapterConfig(
     ctm_config=ctm_config,
-    output_file_name="file.esdl",
+    input_file_name="MapEditorMesoCasev04_run_2.esdl",
+    output_file_name = "MapEditorMesoCasev04_run_2-output.esdl",
     bucket_name="esdl"
     # output_file_path=None,
     # base_path=None,

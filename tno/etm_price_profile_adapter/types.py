@@ -44,6 +44,7 @@ class CTMConfig:
 class CTMAdapterConfig:
     ctm_config: CTMConfig
     output_file_name: str
+    input_file_name: str
     bucket_name: Optional[str] = None
 
 
