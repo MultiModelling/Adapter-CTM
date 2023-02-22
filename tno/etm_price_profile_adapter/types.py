@@ -64,6 +64,7 @@ class ModelRunInfo:
     state: ModelState = field(default=ModelState.UNKNOWN)
     result: Optional[Dict[str, Any]] = None
     reason: Optional[str] = None
-
+    etm_session_id: Optional[str] = None
+    ctm_session_id: Optional[str] = None
     # support for Schema generation in Marshmallow
     Schema: ClassVar[Type[Schema]] = Schema

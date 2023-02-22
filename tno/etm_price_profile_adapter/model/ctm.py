@@ -67,22 +67,24 @@ class CTM(Model):
                 esdl_rel_path = self.model_run_dict[model_run_id].config.input_file_name     # so, if minio not deployed, make sure to run the test from the same folder where you keep the esdl file
             
             ctm_in = read_inputs({esdl.Electrolyzer:"esdl.Electrolyzer.csv", esdl.GasConversion:"esdl.GasConversion.csv"}, esdl_rel_path)
-            print(ctm_in, end='\n\n\n')
+            # print(ctm_in, end='\n\n\n')
             ctm_in["etm_session_id"] = etm_sess_id
             jsn = {'SessionID':self.model_run_dict[model_run_id].config.ctm_config.CTM_session_ID, 'inputs':ctm_in, 'outputs':[]}
             requests.post(url = ctm_url, json = jsn)
             
             out = requests.post(url = ctm_url, json = {'SessionID':self.model_run_dict[model_run_id].config.ctm_config.CTM_session_ID, 'outputs':['yara_production_h2_smr','yara_production_h2_electrolysis'], 'inputs':{}})
             
-            print(out.json())
+            # print(out.json())
             
             write_inputs({esdl.Electrolyzer:"esdl.Electrolyzer.csv", esdl.GasConversion:"esdl.GasConversion.csv"}, esdl_rel_path, self.model_run_dict[model_run_id].config.ctm_config.CTM_session_ID, self.model_run_dict[model_run_id].config.ctm_config.endpoint)
                 
             if self.minio_client:
                 self.minio_client.fput_object(self.model_run_dict[model_run_id].config.bucket_name, self.model_run_dict[model_run_id].config.output_file_name, 'files/' + self.model_run_dict[model_run_id].config.input_file_name)
             
-            print(self.model_run_dict[model_run_id].config.ctm_config.CTM_session_ID)
+            # print(self.model_run_dict[model_run_id].config.ctm_config.CTM_session_ID)
             
+            self.model_run_dict[model_run_id].etm_session_id = str(int(etm_sess_id))
+            self.model_run_dict[model_run_id].ctm_session_id = self.model_run_dict[model_run_id].config.ctm_config.CTM_session_ID
             return ModelRunInfo(
                 model_run_id=model_run_id,
                 state=ModelState.SUCCEEDED,

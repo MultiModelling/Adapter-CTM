@@ -10,8 +10,8 @@ ctm_config = CTMConfig(
 
 ctm_adapter_config = CTMAdapterConfig(
     ctm_config=ctm_config,
-    input_file_name="MapEditorMesoCasev04_run_2.esdl",
-    output_file_name = "MapEditorMesoCasev04_run_2-output.esdl",
+    input_file_name="MapEditorMesoCasev04_run_1.esdl",
+    output_file_name = "test.esdl",
     bucket_name="esdl"
     # output_file_path=None,
     # base_path=None,
@@ -23,5 +23,5 @@ model_run_info = ctm.initialize(model_run_id=model_run_info.model_run_id, config
 model_run_info = ctm.run(model_run_id=model_run_info.model_run_id)
 model_run_info = ctm.results(model_run_id=model_run_info.model_run_id)
 
-result = model_run_info.result
-print(result)
+
+print(*["", "CTM session: ", model_run_info.ctm_session_id, "", "ETM session:", model_run_info.etm_session_id], sep="\n")
