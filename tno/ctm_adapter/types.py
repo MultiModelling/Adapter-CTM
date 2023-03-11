@@ -18,20 +18,6 @@ class ModelState(str, Enum):
 
 
 @dataclass
-class ETMConfig:
-    endpoint: str
-    path: str
-    scenario_ID: str
-
-
-@dataclass
-class ETMAdapterConfig:
-    etm_config: ETMConfig
-    bucket_name: Optional[str] = None      # to check if we want to make optional
-    output_file_name: Optional[str] = None      # output_file_path --> minio bucket path where ESDL file is stored and to be placed
-                                                # output_file_name --> name of ESDL file to be read from minio
-# CTM specific added
-@dataclass
 class CTMConfig:
     endpoint: str
     CTM_scenario_ID: Optional[str] = None
@@ -43,9 +29,9 @@ class CTMConfig:
 @dataclass
 class CTMAdapterConfig:
     ctm_config: CTMConfig
-    output_file_name: str
-    input_file_name: str
-    bucket_name: Optional[str] = None
+    base_path: str
+    input_esdl_file_path: str
+    output_esdl_file_path: str
 
 
 @dataclass
@@ -55,16 +41,12 @@ class ModelRun:
     result: dict
 
 
-#!!!!!!!!!!!!!!!!!!
-
-
 @dataclass(order=True)
 class ModelRunInfo:
     model_run_id: str
     state: ModelState = field(default=ModelState.UNKNOWN)
     result: Optional[Dict[str, Any]] = None
     reason: Optional[str] = None
-    etm_session_id: Optional[str] = None
-    ctm_session_id: Optional[str] = None
+
     # support for Schema generation in Marshmallow
     Schema: ClassVar[Type[Schema]] = Schema

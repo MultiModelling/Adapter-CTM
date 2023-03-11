@@ -1,3 +1,4 @@
+import os
 from abc import ABC, abstractmethod
 from io import BytesIO
 from typing import Dict
@@ -5,8 +6,8 @@ from uuid import uuid4
 
 from minio import Minio
 
-from tno.etm_price_profile_adapter.settings import EnvSettings
-from tno.etm_price_profile_adapter.types import ModelRun, ModelState, ModelRunInfo
+from tno.ctm_adapter.settings import EnvSettings
+from tno.ctm_adapter.types import ModelRun, ModelState, ModelRunInfo
 from tno.shared.log import get_logger
 
 logger = get_logger(__name__)
@@ -56,41 +57,51 @@ class Model(ABC):
                 reason="Error in Model.initialize(): model_run_id unknown"
             )
 
+    def load_from_minio(self, path):
+        bucket = path.split("/")[0]
+        rest_of_path = "/".join(path.split("/")[1:])
+
+        response = self.minio_client.get_object(bucket, rest_of_path)
+        if response:
+            return response.data
+        else:
+            return None
+
     @abstractmethod
     def process_results(self, result):
         pass
 
-    #def store_result(self, model_run_id: str, result):
-    #    if model_run_id in self.model_run_dict:
-    #        res = self.process_results(result)
-    #        if self.minio_client:
-    #            content = BytesIO(bytes(res, 'ascii'))
-    #            base_path = self.model_run_dict[model_run_id].config.base_path
-    #            path = base_path + self.model_run_dict[model_run_id].config.output_file_path
-    #            bucket = path.split("/")[0]
-    #            rest_of_path = "/".join(path.split("/")[1:])
+    def store_result(self, model_run_id: str, result):
+       if model_run_id in self.model_run_dict:
+           res = self.process_results(result)
+           if self.minio_client:
+               content = BytesIO(bytes(res, 'ascii'))
+               base_path = self.model_run_dict[model_run_id].config.base_path
+               path = base_path + '/' + self.model_run_dict[model_run_id].config.output_esdl_file_path
+               bucket = path.split("/")[0]
+               rest_of_path = "/".join(path.split("/")[1:])
 
-    #            if not self.minio_client.bucket_exists(bucket):
-    #                self.minio_client.make_bucket(bucket)
+               if not self.minio_client.bucket_exists(bucket):
+                   self.minio_client.make_bucket(bucket)
 
-    #            self.minio_client.put_object(bucket, rest_of_path, content, content.getbuffer().nbytes)
-    #            self.model_run_dict[model_run_id].result = {
-    #                "path": path
-    #            }
-    #        else:
-    #            self.model_run_dict[model_run_id].result = {
-    #                "result": res
-    #            }
-    #        return ModelRunInfo(
-    #            model_run_id=model_run_id,
-    #            state=ModelState.SUCCEEDED,
-    #        )
-    #    else:
-    #        return ModelRunInfo(
-    #            model_run_id=model_run_id,
-    #            state=ModelState.ERROR,
-    #            reason="Error in Model.store_result(): model_run_id unknown"
-    #        )
+               self.minio_client.put_object(bucket, rest_of_path, content, content.getbuffer().nbytes)
+               self.model_run_dict[model_run_id].result = {
+                   "path": path
+               }
+           else:
+               self.model_run_dict[model_run_id].result = {
+                   "result": res
+               }
+           return ModelRunInfo(
+               model_run_id=model_run_id,
+               state=ModelState.SUCCEEDED,
+           )
+       else:
+           return ModelRunInfo(
+               model_run_id=model_run_id,
+               state=ModelState.ERROR,
+               reason="Error in Model.store_result(): model_run_id unknown"
+           )
 
     def run(self, model_run_id: str):
         if model_run_id in self.model_run_dict:
@@ -126,8 +137,6 @@ class Model(ABC):
         if model_run_id in self.model_run_dict:
             return ModelRunInfo(
                 state=self.model_run_dict[model_run_id].state,
-                etm_session_id=self.model_run_dict[model_run_id].etm_session_id,
-                ctm_session_id=self.model_run_dict[model_run_id].ctm_session_id,
                 model_run_id=model_run_id,
                 result=self.model_run_dict[model_run_id].result,
             )

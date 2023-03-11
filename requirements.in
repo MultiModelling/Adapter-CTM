@@ -12,6 +12,7 @@ colorama
 structlog
 python-dotenv
 
+pyESDL
 requests
 minio
 

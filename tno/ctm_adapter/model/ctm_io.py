@@ -1,24 +1,27 @@
+import esdl
 from esdl.esdl_handler import EnergySystemHandler
-import requests, os, pandas as pd
+import requests, pandas as pd
 
-def read_inputs(Assets, ESDL):
+
+def read_inputs(assets_info, esdl_str):
+
     in_ctm = {}
 
     esh = EnergySystemHandler()                            
-    es: esdl.EnergySystem = esh.load_file(ESDL)  
+    es: esdl.EnergySystem = esh.load_from_string(esdl_str)
     eassets = es.eAllContents()                
 
-    assets = tuple(Assets.keys())
+    assets = tuple(assets_info.keys())
 
     for easset in eassets:                                 
         for asset in assets:                                 
             if isinstance(easset, asset):
-                if isinstance(Assets[asset], list):
-                    for csvfile in Assets[asset]:
+                if isinstance(assets_info[asset], list):
+                    for csvfile in assets_info[asset]:
                         if easset.name in csvfile:
                             pass 
                 else:
-                    df = pd.read_csv('Profiles/%s'%Assets[asset])
+                    df = pd.read_csv('Profiles/%s' % assets_info[asset])
                     df = df.drop('CTMref_w', axis = 1)
                     df = df[df['CTMref_r'].notnull()]
                     df_override = df[df['Overrideval'].notnull()]
@@ -45,9 +48,9 @@ def read_inputs(Assets, ESDL):
     return in_ctm
 
 
-def write_inputs(Assets, ESDL, sessionID, url):
+def write_inputs(assets_info, esdl_str, sessionID, url):
 
-    profiles = Assets.values()
+    profiles = assets_info.values()
     csvfiles = []
     for item in profiles:
         if isinstance(item, list):
@@ -71,16 +74,16 @@ def write_inputs(Assets, ESDL, sessionID, url):
     output = output.json()['output_values']
 
     esh = EnergySystemHandler()
-    es: esdl.EnergySystem = esh.load_file(ESDL)
+    es: esdl.EnergySystem = esh.load_from_string(esdl_str)
     eassets = es.eAllContents()
 
-    assets = tuple(Assets.keys())
+    assets = tuple(assets_info.keys())
 
     for easset in eassets: 
         for asset in assets:  
             if isinstance(easset, asset):  
-                if isinstance(Assets[asset], list):   
-                    for csvfile in Assets[asset]:
+                if isinstance(assets_info[asset], list):
+                    for csvfile in assets_info[asset]:
                         if easset.name.lower() in csvfile.lower(): 
     
                             df = pd.read_csv('./ESDL/Profiles/%s'%csvfile)
@@ -106,7 +109,7 @@ def write_inputs(Assets, ESDL, sessionID, url):
                                     setattr(att, df_i[-2], output[df_i['CTMref_w']])
                 
                 else:
-                    df = pd.read_csv('Profiles/%s'%Assets[asset])
+                    df = pd.read_csv('Profiles/%s' % assets_info[asset])
                     df = df[df['CTMref_w'].notnull()]
                     df = df.drop('CTMref_r', axis = 1)
                     df_override = df[df['Overrideval'].notnull()]
@@ -127,6 +130,5 @@ def write_inputs(Assets, ESDL, sessionID, url):
                             for i in df_i[:-5]:
                                 att = getattr(att, i)
                             setattr(att, df_i[-4], df_i[-3])
-                            
 
-    esh.save()
+    return esh.to_string()

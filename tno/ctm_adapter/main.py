@@ -2,8 +2,8 @@ import json
 from time import strftime
 
 from flask import request, send_from_directory
-from tno.etm_price_profile_adapter import create_app
-from tno.etm_price_profile_adapter.settings import EnvSettings
+from tno.ctm_adapter import create_app
+from tno.ctm_adapter.settings import EnvSettings
 
 from tno.shared.log import get_logger
 from werkzeug.exceptions import HTTPException
@@ -17,9 +17,9 @@ from werkzeug.exceptions import HTTPException
 # warnings.filterwarnings("error")
 
 
-logger = get_logger("tno.flask_rest_api.main")
+logger = get_logger("tno.ctm_adapter.main")
 
-app = create_app("tno.etm_price_profile_adapter.settings.%sConfig" % EnvSettings.env().capitalize())
+app = create_app("tno.ctm_adapter.settings.%sConfig" % EnvSettings.env().capitalize())
 
 
 @app.before_request

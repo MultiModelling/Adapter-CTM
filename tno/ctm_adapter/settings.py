@@ -50,7 +50,7 @@ class Config(object):
 
     SECRET_KEY = secrets.token_urlsafe(16)
 
-    API_TITLE = "MMvIB ETM Price Profile REST API"
+    API_TITLE = "MMvIB CTM REST API"
     API_VERSION = "v1"
     OPENAPI_VERSION = "3.0.2"
     OPENAPI_URL_PREFIX = "/"
@@ -63,7 +63,7 @@ class Config(object):
 
     API_SPEC_OPTIONS = {
         "info": {
-            "description": "This is the MMvIB ETM Price Profile REST API.",
+            "description": "This is the MMvIB CTM REST API.",
             "termsOfService": "https://www.tno.nl",
             "contact": {"email": "edwin.matthijssen@tno.nl"},
             "license": {"name": "TBD", "url": "https://www.tno.nl"},

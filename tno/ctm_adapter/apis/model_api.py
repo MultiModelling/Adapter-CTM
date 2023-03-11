@@ -2,11 +2,11 @@ from flask import jsonify
 from flask_smorest import Blueprint
 from flask.views import MethodView
 from tno.shared.log import get_logger
-from tno.etm_price_profile_adapter.types import ModelRunInfo, ETMAdapterConfig
-from tno.etm_price_profile_adapter.model.etm import ETM
+from tno.ctm_adapter.types import ModelRunInfo, CTMAdapterConfig
+from tno.ctm_adapter.model.ctm import CTM
 
 
-etm = ETM()
+ctm = CTM()
 
 logger = get_logger(__name__)
 
@@ -18,17 +18,17 @@ class Request(MethodView):
 
     @api.response(200, ModelRunInfo.Schema())
     def get(self):
-        res = etm.request()
+        res = ctm.request()
         return jsonify(res)
 
 
 @api.route("/initialize/<model_run_id>")
 class Initialize(MethodView):
 
-    @api.arguments(ETMAdapterConfig.Schema())
+    @api.arguments(CTMAdapterConfig.Schema())
     @api.response(201, ModelRunInfo.Schema())
     def post(self, config, model_run_id: str):
-        res = etm.initialize(model_run_id=model_run_id, config=config)
+        res = ctm.initialize(model_run_id=model_run_id, config=config)
         return jsonify(res)
 
 
@@ -37,7 +37,7 @@ class Run(MethodView):
 
     @api.response(200, ModelRunInfo.Schema())
     def get(self, model_run_id: str):
-        res = etm.run(model_run_id=model_run_id)
+        res = ctm.run(model_run_id=model_run_id)
         return jsonify(res)
 
 
@@ -46,7 +46,7 @@ class Status(MethodView):
 
     @api.response(200, ModelRunInfo.Schema())
     def get(self, model_run_id: str):
-        res = etm.status(model_run_id=model_run_id)
+        res = ctm.status(model_run_id=model_run_id)
         return jsonify(res)
 
 
@@ -55,7 +55,7 @@ class results(MethodView):
 
     @api.response(200, ModelRunInfo.Schema())
     def get(self, model_run_id: str):
-        res = etm.results(model_run_id=model_run_id)
+        res = ctm.results(model_run_id=model_run_id)
         return jsonify(res)
 
 
@@ -64,5 +64,5 @@ class remove(MethodView):
 
     @api.response(200, ModelRunInfo.Schema())
     def get(self, model_run_id: str):
-        etm.remove(model_run_id=model_run_id)
+        ctm.remove(model_run_id=model_run_id)
         return "REMOVED!", 200

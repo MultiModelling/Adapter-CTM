@@ -1,6 +1,6 @@
 import requests
 
-api_endpoint = "http://localhost:9201"
+api_endpoint = "http://localhost:9205"
 
 
 res = requests.get(api_endpoint + '/status')
@@ -22,13 +22,14 @@ else:
     exit(1)
 
 post_body = {
-    "etm_config": {
-        "endpoint": "https://engine.energytransitionmodel.com/api/v3/",
-        "path": "scenarios/{}/curves/electricity_price.csv",
-        "scenario_ID": "763305",
+    "ctm_config": {
+        "endpoint": "https://beta.carbontransitionmodel.com/api/",
+        "CTM_scenario_ID": "base",
+        "ETM_scenario_ID": "13579"
     },
-    "base_path": "bedrijventerreinommoord/Scenario_1_II3050_Nationale_Sturing/Trial_1/MM_workflow_run_1/",
-    "output_file_path": "ETM_price_profile_adapter/elektrictitetisprijs_profiel.csv"
+    "base_path": "meso",
+    "input_esdl_file_path": "input_file.esdl",
+    "output_esdl_file_path": "output_file.esdl"
 }
 
 res = requests.post(api_endpoint + '/model/initialize/' + model_run_id, json=post_body)

@@ -3,7 +3,7 @@ import logging.config
 
 from typing import List, Any
 import structlog
-from tno.etm_price_profile_adapter.settings import EnvSettings
+from tno.ctm_adapter.settings import EnvSettings
 from structlog.threadlocal import merge_threadlocal
 
 timestamper = structlog.processors.TimeStamper(fmt="iso")

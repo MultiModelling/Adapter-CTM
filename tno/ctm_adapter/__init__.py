@@ -8,7 +8,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 import requests
 
-from tno.etm_price_profile_adapter.settings import EnvSettings
+from tno.ctm_adapter.settings import EnvSettings
 
 api = Api()
 env = DotEnv()
@@ -36,8 +36,8 @@ def create_app(object_name):
     api.init_app(app)
 
     # Register blueprints.
-    from tno.etm_price_profile_adapter.apis.status import api as status_api
-    from tno.etm_price_profile_adapter.apis.model_api import api as model_api
+    from tno.ctm_adapter.apis.status import api as status_api
+    from tno.ctm_adapter.apis.model_api import api as model_api
 
     api.register_blueprint(status_api)
     api.register_blueprint(model_api)
@@ -46,7 +46,7 @@ def create_app(object_name):
         logger.info("Registering with MM Registry")
 
         # Register adapter to MM Registry
-        registry_data = {"uri": "http://etm-price-profile-adapter:9201", "used_workers": 0, "name": "ETM",
+        registry_data = {"uri": "http://ctm-adapter:9205", "used_workers": 0, "name": "CTM",
                          "owner": "localhost", "version": "1.0", "max_workers": 1}
 
         try:
