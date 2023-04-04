@@ -57,7 +57,21 @@ class Model(ABC):
                 reason="Error in Model.initialize(): model_run_id unknown"
             )
 
-    def load_from_minio(self, path):
+    def process_path(self, path: str, base_path: str) -> str:
+        if path[0] == '.':
+            return base_path + path.lstrip('./')
+        else:
+            return path.lstrip('./')
+
+    def load_from_minio(self, path, model_run_id):
+
+        path = self.process_path(path, self.model_run_dict[model_run_id].config.base_path)
+
+        logger.info(f"Model Run ID: {str(model_run_id)}")
+        logger.info(f"Model Path: {str(path)}")
+        logger.info(f"Model ESDL IN Path: {str(self.model_run_dict[model_run_id].config.input_esdl_file_path)}")
+        logger.info(f"Model ESDL IN Base Path: {str(self.model_run_dict[model_run_id].config.base_path)}")
+
         bucket = path.split("/")[0]
         rest_of_path = "/".join(path.split("/")[1:])
 
@@ -76,8 +90,16 @@ class Model(ABC):
            res = self.process_results(result)
            if self.minio_client:
                content = BytesIO(bytes(res, 'ascii'))
-               base_path = self.model_run_dict[model_run_id].config.base_path
-               path = base_path + '/' + self.model_run_dict[model_run_id].config.output_esdl_file_path
+               # base_path = self.model_run_dict[model_run_id].config.base_path
+               # path = base_path + '/' + self.model_run_dict[model_run_id].config.output_esdl_file_path
+
+               path = self.process_path(self.model_run_dict[model_run_id].config.output_esdl_file_path,
+                                        self.model_run_dict[model_run_id].config.base_path)
+
+               logger.info(f"Model Run ID: {str(model_run_id)}")
+               logger.info(f"Model ESDL OUT Path: {str(self.model_run_dict[model_run_id].config.output_esdl_file_path)}")
+               logger.info(f"Model ESDL OUT Base Path: {str(self.model_run_dict[model_run_id].config.base_path)}")
+
                bucket = path.split("/")[0]
                rest_of_path = "/".join(path.split("/")[1:])
 

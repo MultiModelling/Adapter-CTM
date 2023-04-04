@@ -19,6 +19,7 @@ from werkzeug.exceptions import HTTPException
 
 logger = get_logger("tno.ctm_adapter.main")
 
+logger.info("Making App")
 app = create_app("tno.ctm_adapter.settings.%sConfig" % EnvSettings.env().capitalize())
 
 

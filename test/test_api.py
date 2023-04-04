@@ -1,6 +1,7 @@
 import requests
 
 api_endpoint = "http://localhost:9205"
+#api_endpoint = "http://adapter-ctm:9205"
 
 
 res = requests.get(api_endpoint + '/status')

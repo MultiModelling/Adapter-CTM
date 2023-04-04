@@ -1,13 +1,13 @@
 version: "3.2"
 
 services:
-  etm-price-profile-adapter:
+  ctm-adapter:
     build: .
     volumes:
       - .:/code
-    command: ["gunicorn", "--reload", "tno.etm_price_profile_adapter.main:app", "-t 300", "-w 1", "-b :9201"]
+    command: ["gunicorn", "--reload", "tno.ctm_adapter.main:app", "-t 300", "-w 1", "-b :9205"]
     ports:
-      - "9201:9201"
+      - "9205:9205"
     env_file:
       - ".env.docker"
     networks:

@@ -93,7 +93,8 @@ class CTM(Model):
         # Now we have prepared the session IDs that we will work with
         if self.minio_client:
             logger.info("Load ESDL file from Minio")
-            input_esdl_bytes = self.load_from_minio(config.base_path + '/' + config.input_esdl_file_path)
+            path = self.process_path(config.input_esdl_file_path, self.model_run_dict[model_run_id].config.base_path)
+            input_esdl_bytes = self.load_from_minio(path, model_run_id)
         else:
             logger.info("Load ESDL file from file system")
             input_path = os.path.join(config.base_path, config.input_esdl_file_path)
